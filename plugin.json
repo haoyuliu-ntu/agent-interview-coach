@@ -2,6 +2,12 @@
   "name": "agent-interview-coach",
   "displayName": "Agent 面试教练 & ACM 白板",
   "version": "1.0.0",
+  "author": {
+    "name": "Haoyu Liu",
+    "url": "https://github.com/haoyuliu-ntu"
+  },
+  "homepage": "https://github.com/haoyuliu-ntu/agent-interview-coach",
+  "repository": "https://github.com/haoyuliu-ntu/agent-interview-coach",
   "description": "中国大厂 Agent 算法/应用开发面试备考插件：支持 AI 协作项目源码排雷、四维防御卡、60 分钟全真模拟面，以及带本地试运行与一键提交的原生 ACM 手撕代码白板。",
   "suggestedPrompts": [
     "进入模式 A，帮我对照源码给简历做红绿灯排雷并生成四维防御卡",

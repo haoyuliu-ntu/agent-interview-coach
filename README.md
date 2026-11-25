@@ -40,12 +40,12 @@
 
 ### Windows (PowerShell)
 ```powershell
-git clone https://github.com/<your-username>/agent-interview-coach.git "$env:USERPROFILE\.gemini\config\plugins\agent-interview-coach"
+git clone https://github.com/haoyuliu-ntu/agent-interview-coach.git "$env:USERPROFILE\.gemini\config\plugins\agent-interview-coach"
 ```
 
 ### macOS / Linux
 ```bash
-git clone https://github.com/<your-username>/agent-interview-coach.git ~/.gemini/config/plugins/agent-interview-coach
+git clone https://github.com/haoyuliu-ntu/agent-interview-coach.git ~/.gemini/config/plugins/agent-interview-coach
 ```
 
 克隆完成后重启一次 Antigravity（或在 **Skills & Customizations** 中启用 **Agent 面试教练 & ACM 白板**）即可生效。
