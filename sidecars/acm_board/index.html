@@ -1,0 +1,243 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>ACM 面试手撕白板</title>
+  <script src="/preload.js"></script>
+  <style>
+    :root {
+      color-scheme: dark;
+      --acm-bg: #111317;
+      --acm-card: #1a1d24;
+      --acm-elev: #252a36;
+      --acm-border: rgba(255, 255, 255, 0.12);
+      --acm-fg: #f3f4f6;
+      --acm-muted: #9ca3af;
+      --acm-accent: #818cf8;
+      --acm-good: #34d399;
+      --acm-warn: #fbbf24;
+      --acm-err: #f87171;
+      --mono: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+    }
+    * { box-sizing: border-box; }
+    html, body {
+      margin: 0 !important; padding: 0 !important; height: 100% !important;
+      background: var(--acm-bg) !important; color: var(--acm-fg) !important;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Microsoft YaHei", sans-serif !important;
+      font-size: 13px; line-height: 1.55;
+    }
+    .shell { display: flex; flex-direction: column; height: 100vh; overflow: hidden; background: var(--acm-bg); color: var(--acm-fg); }
+    .topbar {
+      flex: 0 0 auto; display: flex; align-items: center; justify-content: space-between; gap: 8px;
+      padding: 9px 14px; border-bottom: 1px solid var(--acm-border); background: var(--acm-card);
+    }
+    .title-wrap { display: flex; align-items: center; gap: 8px; min-width: 0; }
+    .badge {
+      font-size: 10.5px; font-weight: 700; padding: 2px 8px; border-radius: 999px; flex: 0 0 auto;
+      background: rgba(129, 140, 248, 0.18); color: #c7d2fe; border: 1px solid rgba(129, 140, 248, 0.38);
+    }
+    .badge.medium { background: rgba(251, 191, 36, 0.16); color: #fde68a; border-color: rgba(251, 191, 36, 0.42); }
+    .badge.hard { background: rgba(248, 113, 113, 0.16); color: #fecaca; border-color: rgba(248, 113, 113, 0.42); }
+    .badge.easy { background: rgba(52, 211, 153, 0.16); color: #a7f3d0; border-color: rgba(52, 211, 153, 0.42); }
+    .prob-title { font-weight: 600; font-size: 13.5px; color: #ffffff; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+    .top-tools { display: flex; align-items: center; gap: 7px; flex: 0 0 auto; }
+    .timer-pill {
+      font-family: var(--mono); font-size: 12.5px; font-weight: 700; font-variant-numeric: tabular-nums;
+      padding: 3px 9px; border-radius: 6px; background: var(--acm-elev); border: 1px solid var(--acm-border);
+      color: #f8fafc; cursor: pointer;
+    }
+    .timer-pill.warn { color: var(--acm-warn); border-color: rgba(251, 191, 36, 0.5); }
+    .timer-pill.over { color: var(--acm-err); border-color: rgba(248, 113, 113, 0.55); }
+    .btn {
+      border: 1px solid var(--acm-border); background: var(--acm-elev); color: #f3f4f6;
+      border-radius: 6px; padding: 4px 10px; font-size: 12px; cursor: pointer; font-weight: 500;
+      transition: border-color 0.15s ease, background 0.15s ease;
+    }
+    .btn:hover { border-color: rgba(255, 255, 255, 0.35); background: #2f3545; color: #ffffff; }
+    .btn:disabled { opacity: 0.55; cursor: not-allowed; }
+    .btn-primary {
+      background: #4f46e5; border-color: #6366f1; color: #ffffff; font-weight: 600;
+    }
+    .btn-primary:hover { background: #4338ca; border-color: #818cf8; }
+    .btn-good {
+      background: rgba(16, 185, 129, 0.2); border-color: rgba(52, 211, 153, 0.45); color: #6ee7b7; font-weight: 600;
+    }
+    .btn-good:hover { background: rgba(16, 185, 129, 0.3); color: #a7f3d0; }
+    .main { flex: 1 1 auto; overflow-y: auto; padding: 10px 12px 14px; display: flex; flex-direction: column; gap: 10px; min-height: 0; }
+    .pane-left, .pane-right { display: flex; flex-direction: column; gap: 10px; min-width: 0; }
+    @media (min-width: 820px) {
+      .main {
+        display: grid;
+        grid-template-columns: minmax(340px, 42%) minmax(420px, 58%);
+        gap: 12px;
+        padding: 12px 16px;
+        overflow: hidden;
+      }
+      .pane-left {
+        overflow-y: auto;
+        padding-right: 2px;
+      }
+      .pane-right {
+        overflow-y: auto;
+        min-height: 0;
+      }
+      .editor-panel {
+        flex: 1 1 auto;
+        display: flex;
+        flex-direction: column;
+        min-height: 280px;
+      }
+      .editor-wrap {
+        flex: 1 1 auto;
+        min-height: 260px !important;
+        max-height: none !important;
+      }
+    }
+    .panel {
+      background: var(--acm-card); border: 1px solid var(--acm-border); border-radius: 8px; overflow: hidden;
+    }
+    .panel-head {
+      display: flex; align-items: center; justify-content: space-between; gap: 8px;
+      padding: 7px 11px; background: #20242e; border-bottom: 1px solid var(--acm-border);
+      font-size: 12px; font-weight: 600; color: #f8fafc;
+    }
+    .panel-body { padding: 10px 12px; }
+    .prob-meta { font-size: 11px; color: var(--acm-muted); margin-bottom: 6px; }
+    .prob-sec-title { font-size: 12px; font-weight: 700; color: #93c5fd; margin: 11px 0 4px; }
+    .prob-text { white-space: pre-wrap; font-size: 13px; color: #f3f4f6; margin: 0; line-height: 1.65; }
+    .sample-box {
+      margin-top: 9px; padding: 8px 10px; border-radius: 6px; background: #12151c; border: 1px solid var(--acm-border);
+      font-family: var(--mono); font-size: 12px; color: #e5e7eb;
+    }
+    .sample-head { display: flex; justify-content: space-between; align-items: center; margin-bottom: 6px; color: #cbd5e1; font-family: inherit; font-size: 11.5px; font-weight: 600; }
+    .sample-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+    .sample-col > div { font-family: inherit; font-size: 11px; color: #9ca3af; }
+    .sample-col pre { margin: 3px 0 0; padding: 6px 8px; border-radius: 5px; background: #1c202a; color: #f8fafc; border: 1px solid rgba(255,255,255,0.06); white-space: pre-wrap; word-break: break-all; }
+    .sample-exp { margin-top: 6px; font-family: inherit; font-size: 11.5px; color: #cbd5e1; }
+    .editor-wrap { display: flex; background: #0f1218; min-height: 240px; max-height: 400px; }
+    .line-nums {
+      flex: 0 0 42px; padding: 10px 8px 10px 4px; text-align: right; user-select: none;
+      font-family: var(--mono); font-size: 13px; line-height: 1.6; color: #64748b;
+      background: #0b0d12; border-right: 1px solid var(--acm-border);
+      white-space: pre; overflow: hidden;
+    }
+    .code-editor {
+      flex: 1 1 auto; border: none; outline: none; resize: none; padding: 10px 12px;
+      background: transparent; color: #f8fafc; font-family: var(--mono); font-size: 13px;
+      line-height: 1.6; tab-size: 4; white-space: pre; overflow: auto;
+    }
+    select.lang-select {
+      background: var(--acm-elev); color: #f8fafc; border: 1px solid var(--acm-border);
+      border-radius: 5px; padding: 2px 8px; font-size: 12px; outline: none;
+    }
+    .io-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+    .io-box {
+      width: 100%; min-height: 80px; resize: vertical; padding: 8px 9px;
+      background: #0f1218; color: #f8fafc; border: 1px solid var(--acm-border); border-radius: 6px;
+      font-family: var(--mono); font-size: 12px; outline: none;
+    }
+    .out-box {
+      min-height: 80px; max-height: 160px; overflow: auto; margin: 0; padding: 8px 9px;
+      background: #0f1218; color: #e2e8f0; border: 1px solid var(--acm-border); border-radius: 6px;
+      font-family: var(--mono); font-size: 12px; white-space: pre-wrap; word-break: break-word;
+    }
+    .out-box.ok { border-color: rgba(52, 211, 153, 0.45); color: #a7f3d0; }
+    .out-box.err { border-color: rgba(248, 113, 113, 0.48); color: #fecaca; }
+    .footer-bar {
+      flex: 0 0 auto; display: flex; align-items: center; justify-content: space-between; gap: 8px;
+      padding: 9px 14px; border-top: 1px solid var(--acm-border); background: var(--acm-card);
+    }
+    .status-msg { font-size: 12px; color: #cbd5e1; min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+    .status-msg.good { color: var(--acm-good); }
+    .status-msg.err { color: var(--acm-err); }
+    .btn-group { display: flex; gap: 8px; flex: 0 0 auto; }
+    .collapsed .panel-body { display: none; }
+  </style>
+</head>
+<body>
+  <div class="shell">
+    <header class="topbar">
+      <div class="title-wrap">
+        <span class="badge medium" id="prob-diff">Medium</span>
+        <span class="prob-title" id="prob-title">加载题目中…</span>
+      </div>
+      <div class="top-tools">
+        <span class="timer-pill" id="timer-pill" title="点击暂停/继续；双击重置为 20:00">20:00</span>
+        <button type="button" class="btn" id="btn-popout" title="在屏幕正中央弹出独立双栏大窗口">⛶ 居中大窗</button>
+        <button type="button" class="btn" id="btn-reload" title="从面试官同步最新题目">同步题目</button>
+      </div>
+    </header>
+
+    <main class="main">
+      <div class="pane-left">
+        <section class="panel" id="prob-panel">
+          <div class="panel-head">
+            <span id="prob-cat">ACM 题目描述</span>
+            <button type="button" class="btn" id="btn-toggle-prob" style="padding:1px 7px;font-size:11px">收起题面</button>
+          </div>
+          <div class="panel-body">
+            <p class="prob-text" id="prob-statement"></p>
+            <div class="prob-sec-title">输入格式</div>
+            <p class="prob-text" id="prob-input"></p>
+            <div class="prob-sec-title">输出格式</div>
+            <p class="prob-text" id="prob-output"></p>
+            <div class="prob-sec-title">数据范围</div>
+            <p class="prob-text" id="prob-constraints"></p>
+            <div id="prob-samples"></div>
+          </div>
+        </section>
+      </div>
+
+      <div class="pane-right">
+        <section class="panel editor-panel">
+          <div class="panel-head">
+            <div style="display:flex;align-items:center;gap:8px">
+              <span>ACM 完整代码区</span>
+              <select id="lang-select" class="lang-select">
+                <option value="python">Python 3</option>
+                <option value="javascript">JavaScript (Node)</option>
+                <option value="cpp">C++ 17</option>
+                <option value="java">Java</option>
+              </select>
+            </div>
+            <div style="display:flex;gap:6px">
+              <button type="button" class="btn" id="btn-template" style="padding:2px 7px;font-size:11px">重置 ACM 模板</button>
+            </div>
+          </div>
+          <div class="editor-wrap">
+            <div class="line-nums" id="line-nums">1</div>
+            <textarea id="code-editor" class="code-editor" spellcheck="false" placeholder="在这里写完整 ACM 代码（自行读取 stdin 并输出结果）…"></textarea>
+          </div>
+        </section>
+
+        <section class="panel">
+          <div class="panel-head">
+            <span>本地自测（stdin → stdout）</span>
+            <span id="run-meta" style="font-size:11px;color:var(--acm-muted);font-family:var(--mono)">Ctrl+Enter 快捷试运行</span>
+          </div>
+          <div class="panel-body io-grid">
+            <div>
+              <div style="font-size:11px;color:var(--acm-muted);margin-bottom:4px">自定义标准输入 (stdin)</div>
+              <textarea id="stdin-input" class="io-box" spellcheck="false" placeholder="粘贴样例输入…"></textarea>
+            </div>
+            <div>
+              <div style="font-size:11px;color:var(--acm-muted);margin-bottom:4px">运行结果 (stdout / stderr)</div>
+              <pre id="run-output" class="out-box">点击下方「本地试运行」测试样例…</pre>
+            </div>
+          </div>
+        </section>
+      </div>
+    </main>
+
+    <footer class="footer-bar">
+      <span class="status-msg" id="status-msg">就绪 · 写完后点击右侧按钮一键交给面试官</span>
+      <div class="btn-group">
+        <button type="button" class="btn btn-good" id="btn-run">▶ 本地试运行</button>
+        <button type="button" class="btn btn-primary" id="btn-submit">📤 提交给面试官评审</button>
+      </div>
+    </footer>
+  </div>
+  <script src="/app.js"></script>
+</body>
+</html>

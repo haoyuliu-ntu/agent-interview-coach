@@ -1,0 +1,11 @@
+{
+  "name": "agent-interview-coach",
+  "displayName": "Agent 面试教练 & ACM 白板",
+  "version": "1.0.0",
+  "description": "中国大厂 Agent 算法/应用开发面试备考插件：支持 AI 协作项目源码排雷、四维防御卡、60 分钟全真模拟面，以及带本地试运行与一键提交的原生 ACM 手撕代码白板。",
+  "suggestedPrompts": [
+    "进入模式 A，帮我对照源码给简历做红绿灯排雷并生成四维防御卡",
+    "进入模式 B，来一场中国大厂 60 分钟全真 Agent 模拟面试（含 ACM 手撕）",
+    "直接给我出一道中国大厂高频 ACM 手撕题并打开白板"
+  ]
+}

@@ -1,0 +1,9 @@
+# Runtime problem & draft files (contain local conversationId / personal drafts)
+current-problem.json
+current-draft.json
+
+# OS / Editor / Temp files
+*.tmp
+.DS_Store
+Thumbs.db
+node_modules/
