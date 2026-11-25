@@ -1,17 +1,19 @@
 {
   "name": "agent-interview-coach",
   "displayName": "Agent 面试教练 & ACM 白板",
-  "version": "1.0.0",
+  "version": "2.0.0",
   "author": {
     "name": "Haoyu Liu",
     "url": "https://github.com/haoyuliu-ntu"
   },
   "homepage": "https://github.com/haoyuliu-ntu/agent-interview-coach",
   "repository": "https://github.com/haoyuliu-ntu/agent-interview-coach",
-  "description": "中国大厂 Agent 算法/应用开发面试备考插件：支持 AI 协作项目源码排雷、四维防御卡、60 分钟全真模拟面，以及带本地试运行与一键提交的原生 ACM 手撕代码白板。",
+  "description": "中国大厂 Agent 算法/应用开发实战面试教练：支持简历源码红绿灯排雷、动态三档压力模拟面、表达诊断与关键词命中、弱点靶向 5 连击二刷闭环，以及带本地试运行与 6 维成长看板的原生 ACM 实战工作台。",
   "suggestedPrompts": [
     "进入模式 A，帮我对照源码给简历做红绿灯排雷并生成四维防御卡",
-    "进入模式 B，来一场中国大厂 60 分钟全真 Agent 模拟面试（含 ACM 手撕）",
-    "直接给我出一道中国大厂高频 ACM 手撕题并打开白板"
+    "进入模式 B，来一场中国大厂 60 分钟全真 Agent 模拟面试（动态压力面 + ACM 手撕）",
+    "进入模式 C，读取我的历史错题与低分项，发起弱点靶向 5 连击二刷",
+    "直接给我出一道中国大厂高频 ACM 手撕题并打开白板",
+    "打开我的备考成长看板，分析近期 6 维能力趋势与核心短板"
   ]
 }

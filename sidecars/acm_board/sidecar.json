@@ -2,24 +2,24 @@
   "command": "node",
   "args": ["main.mjs"],
   "restart_policy": "always",
-  "display_name": "ACM 面试白板",
-  "description": "Interactive ACM-mode live coding whiteboard for Agent technical interviews with problem statement, 20-minute countdown, local runner, and one-click submission to the interviewer.",
+  "display_name": "面试工作台（ACM & 成长看板）",
+  "description": "Interactive ACM-mode live coding whiteboard and 6-dimension competency/weakness progress dashboard for Agent technical interviews.",
   "has_web_ui": true,
   "agent_permissions": {
     "allows_user_interactions": true
   },
   "ui_config": {
-    "display_name": "ACM 面试白板",
+    "display_name": "面试工作台（ACM & 成长看板）",
     "views": [
       {
         "path": "/",
         "entrypoint": "SIDECAR_UI_ENTRYPOINT_AUX_PANE",
-        "title": "ACM 面试白板"
+        "title": "面试工作台（ACM & 成长看板）"
       },
       {
         "path": "/",
         "entrypoint": "SIDECAR_UI_ENTRYPOINT_SIDEBAR",
-        "title": "ACM 面试白板"
+        "title": "面试工作台（ACM & 成长看板）"
       }
     ]
   }

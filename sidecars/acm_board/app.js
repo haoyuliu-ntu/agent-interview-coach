@@ -16,7 +16,25 @@
     timerRunning: true,
     timerId: null,
     saveTimer: null,
+    activeTab: 'acm',
   };
+
+  function switchTab(tab) {
+    const next = tab === 'dashboard' ? 'dashboard' : 'acm';
+    state.activeTab = next;
+    const isDash = next === 'dashboard';
+    $('tab-acm')?.classList.toggle('active', !isDash);
+    $('tab-dashboard')?.classList.toggle('active', isDash);
+    $('acm-main')?.classList.toggle('hidden', isDash);
+    $('acm-footer')?.classList.toggle('hidden', isDash);
+    $('dashboard-view')?.classList.toggle('hidden', !isDash);
+    $('timer-pill')?.classList.toggle('hidden', isDash);
+    $('btn-reload')?.classList.toggle('hidden', isDash);
+    $('btn-dash-refresh')?.classList.toggle('hidden', !isDash);
+    if (isDash) {
+      window.InterviewDashboard?.refresh?.();
+    }
+  }
 
   function apiFetch(url, options = {}) {
     const f = window.sidecar?.fetch ? window.sidecar.fetch.bind(window.sidecar) : fetch;
@@ -356,6 +374,8 @@
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({
               conversationId: convId,
+              tab: state.activeTab,
+              workspace: window.InterviewDashboard?.getWorkspace?.() || '',
               screenWidth: window.screen?.availWidth || 1920,
               screenHeight: window.screen?.availHeight || 1080,
             }),
@@ -375,6 +395,8 @@
     }
   }
 
+  $('tab-acm')?.addEventListener('click', () => switchTab('acm'));
+  $('tab-dashboard')?.addEventListener('click', () => switchTab('dashboard'));
   $('btn-reload').addEventListener('click', () => loadProblem(true));
   $('btn-run').addEventListener('click', handleRun);
   $('btn-submit').addEventListener('click', handleSubmit);
@@ -386,4 +408,8 @@
 
   loadProblem(false);
   startTimer();
+  window.InterviewDashboard?.init?.();
+  if (new URLSearchParams(location.search).get('tab') === 'dashboard') {
+    switchTab('dashboard');
+  }
 })();

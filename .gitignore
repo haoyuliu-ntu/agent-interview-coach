@@ -7,3 +7,10 @@ current-draft.json
 .DS_Store
 Thumbs.db
 node_modules/
+
+# Candidate personal interview prep artifacts (must stay in user workspace)
+interview-prep/
+sessions/
+weak_points.md
+*-defense.md
+*.local.json
